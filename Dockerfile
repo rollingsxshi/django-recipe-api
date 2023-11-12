@@ -28,12 +28,16 @@ RUN poetry config virtualenvs.create false
 
 # install packages
 COPY poetry.lock pyproject.toml ./
-RUN if [ "${DEVELOPMENT}" = "1" ]; \
+RUN apt-get install -y libpq-dev gcc && \
+    if [ "${DEVELOPMENT}" = "1" ]; \
     then \
         poetry install; \
     else \
         poetry install --no-dev; \
-    fi
+    fi \
+    && apt-get purge -y libpq-dev gcc \
+    && apt-get autoremove -y \
+    && apt-get clean
 
 # copy code files to container
 COPY ./app /app
