@@ -26,7 +26,7 @@ display_banner() {
     echo -e "  |  | \/\  ___/\  \___|  |  |_> >  ___/ "
     echo -e "  |__|    \_____>\_____>__|   __/ \_____> "
     echo -e "                          |__|        "
-    echo -e " D J A N G O    R E C I P E     A P I  "
+    echo -e "   D J A N G O    R E C I P E     A P I  "
     echo -e "\n"
 }
 
@@ -102,6 +102,24 @@ case $TASK in
             flake8 . && black --check . && isort -c .
         else
             docker-compose run --rm app bash -c "flake8 . && black --check . && isort -c ."
+        fi
+    ;;
+    makemigrations)
+        # Run linter and formatter checks
+        if [ "${IS_CONTAINER}" = "1" ]
+        then
+            python manage.py makemigrations
+        else
+            docker-compose run --rm app bash -c "python manage.py makemigrations"
+        fi
+    ;;
+    migrate)
+        # Run linter and formatter checks
+        if [ "${IS_CONTAINER}" = "1" ]
+        then
+            python manage.py wait_for_db && python manage.py migrate
+        else
+            docker-compose run --rm app bash -c "python manage.py wait_for_db && python manage.py migrate"
         fi
     ;;
     help|*)
