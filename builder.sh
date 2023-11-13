@@ -101,7 +101,7 @@ case $TASK in
         then
             flake8 . && black --check . && isort -c .
         else
-            docker-compose run --rm app bash -c "flake8 . && black --check . && isort -c ."
+            docker-compose run --rm app bash -c "flake8 . && black --check . && isort . -c"
         fi
     ;;
     makemigrations)
