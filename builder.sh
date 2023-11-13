@@ -122,6 +122,15 @@ case $TASK in
             docker-compose run --rm app bash -c "python manage.py wait_for_db && python manage.py migrate"
         fi
     ;;
+    manage)
+        # Run python manage.py commands
+        if [ "${IS_CONTAINER}" = "1" ]
+        then
+            python manage.py $ARGS
+        else
+            docker-compose run --rm app bash -c "python manage.py $ARGS"
+        fi
+    ;;
     help|*)
         # Help menu
         options
